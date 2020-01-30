@@ -19,8 +19,6 @@ class Mountain:
 			next = random.choice( [self.range[-1] + step, self.range[-1] - step] )
 			self.range.append( next )
 
-		self.top = max(self.range)
-
 
 	def energyFunction(self, x): #We're searching for the top of the range, maximize this
 		return self.range[x]

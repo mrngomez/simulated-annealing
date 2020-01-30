@@ -14,7 +14,7 @@ def simulatedAnnealing(problem, inMax, inMin, tmax, tmin):
 
 	currentState = random.randint( inMin, inMax ) #Initial state
 
-	for t in range(tmax - tmin):
+	for t in range(tmax, tmin):
 
 		currentEnergy = problem.energyFunction(currentState)
 		
@@ -29,4 +29,4 @@ def simulatedAnnealing(problem, inMax, inMin, tmax, tmin):
 		elif (math.exp(deltaE / t) > random.uniform(0, 1)):
 			currentState = nextState
 
-	return currentState
+	return currentState # This is X, not Y!
