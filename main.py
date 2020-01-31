@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 def main():
 
 	m = mr.Mountain()
+
 	sol = sa.simulatedAnnealing(m, 1000, 0, 900000)
 
 	index = m.range.index(max(m.range))

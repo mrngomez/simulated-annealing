@@ -16,7 +16,7 @@ class Mountain:
 			step = random.uniform(0.5, 0.01) #TODO: made this variable
 
 			# Get last value from range list and choose the next point in the vecinity
-			next = random.choice( [self.range[-1] + step, self.range[-1] - step] )
+			next = random.uniform(self.range[-1] + step, self.range[-1] - step)
 			self.range.append( next )
 
 
