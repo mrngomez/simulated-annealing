@@ -1,5 +1,4 @@
 
-import sys
 import random
 import math
 
@@ -10,15 +9,25 @@ tmax, tmin, and in the future cooling rate
 
 """
 
-def simulatedAnnealing(problem, inMax, inMin, tmax, tmin):
+def simulatedAnnealing(problem, inMax, inMin, tmax, tmin=10):
+
+	interval = inMax - inMin
+	neightborhood = interval // 5
 
 	currentState = random.randint( inMin, inMax ) #Initial state
 
-	for t in range(tmax, tmin):
+	print("Begin simulatedAnnealing with tmax: {} tmin: {}".format(tmax, tmin))
+
+	for t in range(tmax, tmin, -1):
+
+		#print("cooling down: {}".format(t), end='\r', flush=True)
 
 		currentEnergy = problem.energyFunction(currentState)
 		
-		nextState = random.randint( inMin, inMax )
+		nextState = random.randint( currentState - neightborhood, currentState + neightborhood )
+
+		nextState = max(inMin, nextState) # Bound the nextState inside the available problem's interval
+		nextState = min(inMax, nextState)
 
 		nextEnergy = problem.energyFunction(nextState)
 
@@ -26,7 +35,7 @@ def simulatedAnnealing(problem, inMax, inMin, tmax, tmin):
 
 		if deltaE > 0:
 			currentState = nextState
-		elif (math.exp(deltaE / t) > random.uniform(0, 1)):
+		elif (math.exp( - deltaE / t) > random.random()):
 			currentState = nextState
 
 	return currentState # This is X, not Y!
