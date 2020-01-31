@@ -1,26 +1,38 @@
-import mountainRange as mr
+import mountainRange      as mr
+import Parabolic          as pa
 import simulatedAnnealing as sa
-import matplotlib.pyplot as plt
+import matplotlib.pyplot  as plt
 
 def main():
 
-	m = mr.Mountain()
+	#m = mr.Mountain()
+	p = pa.Parabolic()
 
-	sol = sa.simulatedAnnealing(m, 1000, 0, 900000)
+	sol, energy, states, temps = sa.simulatedAnnealing(p, 200 - 1, 	0)
 
-	index = m.range.index(max(m.range))
-	value = max(m.range)
+	index = p.range.index(max(p.range))
+	value = max(p.range)
 
-	print("sol {} realSol {}".format(m.range[sol], value))
+	print("sol {} realSol {}".format(p.range[sol], value))
 
-	if m.range[sol] == value:
+	if p.range[sol] == value:
 		print("ha funcionao")
 
-	plt.plot(m.range, label='Mountain range')
-	plt.plot(sol, m.range[sol], label='simulatedAnnealing', marker='o', markersize=10, color="red")
+	plt.figure()
+	plt.subplot(221) #Nrows, ncols, index
+	plt.plot(p.range, label='Mountain range')
+	plt.plot(sol, p.range[sol], label='simulatedAnnealing', marker='o', markersize=10, color="red")
 	plt.plot(index, value, label='realSol', marker='o', markersize=10, color="purple")
-	plt.xlabel('x')
-	plt.ylabel('y')
+	plt.legend()
+	plt.subplot(222)
+	plt.plot(energy, label='energy', color="orange")
+	plt.legend()
+	plt.subplot(223)
+	plt.plot(states, label='states', color="green")
+	plt.legend()
+	plt.subplot(224)
+	plt.plot(temps, label='temps', color="red")
+	plt.xscale("log")
 	plt.legend()
 	plt.show()
 	

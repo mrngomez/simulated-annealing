@@ -1,41 +1,53 @@
 
-import random
+import numpy.random as rn
 import math
+import numpy as np
 
 """
 The algorithm gets a problem, that must have the methon energyFunction and a range of possible inputs
 
-tmax, tmin, and in the future cooling rate
-
 """
 
-def simulatedAnnealing(problem, inMax, inMin, tmax, tmin=10):
+def simulatedAnnealing(problem, inMax, inMin, tmin=0):
 
 	interval = inMax - inMin
-	neightborhood = interval // 5
+	neightborhood = interval // 4
+	energy = []
+	states = []
+	temps  = []
+	i = np.nextafter(0, math.inf)
+	cooldown = False
 
-	currentState = random.randint( inMin, inMax ) #Initial state
+	currentState = rn.randint( inMin, inMax ) #Initial state
 
-	print("Begin simulatedAnnealing with tmax: {} tmin: {}".format(tmax, tmin))
-
-	for t in range(tmax, tmin, -1):
+	while not cooldown:
 
 		#print("cooling down: {}".format(t), end='\r', flush=True)
+		i += np.nextafter(i, math.inf)
+		t = 1 / i #exponential cooldown
+
+		temps.append(t)
 
 		currentEnergy = problem.energyFunction(currentState)
 		
-		nextState = random.randint( currentState - neightborhood, currentState + neightborhood )
+		nextState = rn.randint( currentState - neightborhood, currentState + neightborhood )
 
 		nextState = max(inMin, nextState) # Bound the nextState inside the available problem's interval
 		nextState = min(inMax, nextState)
 
 		nextEnergy = problem.energyFunction(nextState)
 
+
 		deltaE = nextEnergy - currentEnergy
 
 		if deltaE > 0:
 			currentState = nextState
-		elif (math.exp( - deltaE / t) > random.random()):
+		elif (np.exp( - deltaE / t) > rn.uniform(0,1)):
 			currentState = nextState
 
-	return currentState # This is X, not Y!
+		energy.append(problem.energyFunction(currentState))
+		states.append(currentState)
+
+		if t <= tmin: cooldown = True
+
+	return currentState, energy, states, temps
