@@ -8,25 +8,24 @@ The algorithm gets a problem, that must have the methon energyFunction and a ran
 
 """
 
-def simulatedAnnealing(problem, inMax, inMin, tmin=0):
+def simulatedAnnealing(problem, inMax, inMin, steps=50000):
 
 	interval = inMax - inMin
 	neightborhood = interval // 4
 	energy = []
 	states = []
 	temps  = []
-	i = np.nextafter(0, math.inf)
-	cooldown = False
+	tMax = 25000
+	tMin = 2.5
 
-	currentState = rn.randint( inMin, inMax ) #Initial state
+	# precalcs...
+	tFactor = - math.log(tMax/tMin)
 
-	while not cooldown:
+	# Initial state
+	t = tMax
+	currentState = rn.randint(inMin, inMax) #Initial state
 
-		#print("cooling down: {}".format(t), end='\r', flush=True)
-		i += np.nextafter(i, math.inf)
-		t = 1 / i #exponential cooldown
-
-		temps.append(t)
+	for step in range(steps):
 
 		currentEnergy = problem.energyFunction(currentState)
 		
@@ -35,6 +34,8 @@ def simulatedAnnealing(problem, inMax, inMin, tmin=0):
 		nextState = max(inMin, nextState) # Bound the nextState inside the available problem's interval
 		nextState = min(inMax, nextState)
 
+		#print("currentState {} nextState {}".format(currentState, nextState))
+
 		nextEnergy = problem.energyFunction(nextState)
 
 
@@ -42,12 +43,16 @@ def simulatedAnnealing(problem, inMax, inMin, tmin=0):
 
 		if deltaE > 0:
 			currentState = nextState
-		elif (np.exp( - deltaE / t) > rn.uniform(0,1)):
+		elif (np.exp( - deltaE / t) > rn.random()):
 			currentState = nextState
 
+
+		# Update the temp:
+		t = tMax * math.exp(tFactor * step / steps)
+
+		# Statistics for the algorithm
+		temps.append(t)
 		energy.append(problem.energyFunction(currentState))
 		states.append(currentState)
-
-		if t <= tmin: cooldown = True
 
 	return currentState, energy, states, temps

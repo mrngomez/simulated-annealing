@@ -5,35 +5,37 @@ import matplotlib.pyplot  as plt
 
 def main():
 
-	#m = mr.Mountain()
-	p = pa.Parabolic()
+	#m = mr.Mountain(width = 25)
+	m = pa.Parabolic()
 
-	sol, energy, states, temps = sa.simulatedAnnealing(p, 200 - 1, 	0)
+	print("inMin {} inMax {}".format(m.inMin, m.inMax))
 
-	index = p.range.index(max(p.range))
-	value = max(p.range)
+	sol, energy, states, temps = sa.simulatedAnnealing(m, m.inMax - 1, m.inMin, 50000) #problem, inMax, inMin, steps
 
-	print("sol {} realSol {}".format(p.range[sol], value))
+	index = m.range.index(max(m.range))
+	value = max(m.range)
 
-	if p.range[sol] == value:
+	print("sol {} realSol {}".format(m.range[sol], value))
+
+	if m.range[sol] == value:
 		print("ha funcionao")
 
 	plt.figure()
 	plt.subplot(221) #Nrows, ncols, index
-	plt.plot(p.range, label='Mountain range')
-	plt.plot(sol, p.range[sol], label='simulatedAnnealing', marker='o', markersize=10, color="red")
+	plt.plot(m.range, label='Mountain range')
+	plt.plot(sol, m.range[sol], label='simulatedAnnealing', marker='o', markersize=10, color="red")
 	plt.plot(index, value, label='realSol', marker='o', markersize=10, color="purple")
-	plt.legend()
+	plt.title("problem range")
 	plt.subplot(222)
 	plt.plot(energy, label='energy', color="orange")
-	plt.legend()
+	plt.title("energy")
 	plt.subplot(223)
 	plt.plot(states, label='states', color="green")
-	plt.legend()
+	plt.title("states")
 	plt.subplot(224)
 	plt.plot(temps, label='temps', color="red")
-	plt.xscale("log")
-	plt.legend()
+	#plt.xscale("log")
+	plt.title("temps")
 	plt.show()
 	
 

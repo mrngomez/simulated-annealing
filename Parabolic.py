@@ -1,15 +1,17 @@
 
 class Parabolic:
 
-	def __init__(self, width=100):
+	def __init__(self, width=500):
 
 		self.width  = width
+		self.inMin = -self.width
+		self.inMax =  self.width
 		self.range = []
 
-		for x in range(-self.width, self.width, 1): # Generating the mountain range randomly...
+		for x in range(self.inMin, self.inMax, 1): # Generating the mountain range randomly...
 			
 			self.range.append( (- ( x ** 2 )) + 10000)
 
 
-	def energyFunction(self, x): #We're searching for the top of the range, maximize this
-		return self.range[x]
+	def energyFunction(self, x):
+		return - self.range[x]

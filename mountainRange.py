@@ -7,11 +7,13 @@ class Mountain:
 
 		self.heigth = heigth #Dimensions of the mountain range
 		self.width  = width
+		self.inMin = 0
+		self.inMax = self.width
 		self.range = []
 
 		self.range.append(random.uniform(0, self.heigth)) #First point at random heigth
 
-		for _ in range(self.width): # Generating the mountain range randomly...
+		for _ in range(self.inMin, self.inMax, 1): # Generating the mountain range randomly...
 			
 			step = random.uniform(0.5, 0.01) #TODO: made this variable
 
@@ -20,5 +22,5 @@ class Mountain:
 			self.range.append( next )
 
 
-	def energyFunction(self, x): #We're searching for the top of the range, maximize this
-		return self.range[x]
+	def energyFunction(self, x):
+		return - self.range[x]
